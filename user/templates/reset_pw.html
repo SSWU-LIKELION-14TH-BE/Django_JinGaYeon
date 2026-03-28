@@ -1,0 +1,16 @@
+<!DOTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title> 비밀번호 재설정</title>
+</head>
+<body>
+    <h1>새 비밀번호 재설정</h1>
+
+    <form method ="post">
+        {% csrf_token %}
+        <input type="password" name="password" placeholder="새 비밀번호">
+        <button type="submit">비밀번호 변경</button>
+    </form>
+</body>
+</html>
