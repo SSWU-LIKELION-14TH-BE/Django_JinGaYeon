@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, redirect
 from django. contrib.auth import login
+from django. contrib. auth. decorators import login_required
 from .forms import SignUpForm
 
 def signup_view(request):
@@ -11,8 +12,16 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('signup')
+            return redirect('login')
+        else:
+             print(form.errors)
     else:
         form = SignUpForm()
 
     return render(request, 'signup.html', {'form': form})
+
+
+
+@login_required
+def home_view(request):
+    return render(request, 'home.html')
