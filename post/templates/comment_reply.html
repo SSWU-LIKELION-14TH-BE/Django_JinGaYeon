@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>댓글</title>
+</head>
+<body>
+
+        <div style="border:1px solid #f84c4c; padding:10px; margin-bottom:10px;">
+            <p>{{ parent_comment.content }}</p>
+            <p>작성자: {{ parent_comment.author }}</p>
+            <p>{{ parent_comment.updated_at }}</p> 
+        </div>
+
+        <hr>
+        <p>{{ parent_comment.author }}님에게 답글</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">답글달기</button>
+        </form>
+        
+
+    <a href="{% url 'comment' post.pk %}">뒤로가기</a>
+</body>
+</html>

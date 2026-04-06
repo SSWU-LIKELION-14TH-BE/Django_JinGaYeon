@@ -1,0 +1,6 @@
+비밀번호 재설정을 요청하셨습니다.
+
+아래 링크를 클릭해서 새 비밀번호를 설정하세요:
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+
+본인이 요청하지 않았다면 이 메일을 무시하시면 됩니다.

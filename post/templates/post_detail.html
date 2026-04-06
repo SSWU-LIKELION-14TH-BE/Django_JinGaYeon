@@ -1,0 +1,33 @@
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+
+
+        {% if post.tech_stacks.all %}
+        <p>
+            <strong>기술 스택:</strong>
+            {% for tech in post.tech_stacks.all %}
+                {{ tech.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        {% endif %}
+
+        {% if post.image %}
+                <img src="{{ post.image.url }}" alt="게시글 이미지" width="300">
+        {% endif %}
+
+<p>작성자: {{ post.author }}</p>
+<p>작성일: {{ post.updated_at  }}</p>
+<a href="{% url 'post_list'%}">
+    <button type="button">돌아가기</button>   
+</a>
+
+{% if user == post.author %}
+    <a href="{% url 'post_update' post.pk %}">
+        <button type="button">수정</button>   
+    </a>
+    <a href="{% url 'post_delete' post.pk %}">
+        <button type="button">삭제</button>   
+    </a>
+{% endif %}
+
+<hr>

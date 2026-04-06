@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>댓글 삭제</title>
+</head>
+<body>
+
+
+{% if comments %}
+        {% for comment in comments %}
+         <div style="border:1px solid gray; margin-bottom:15px; padding:10px;">
+             <p><strong>{{ comment.author }}</strong></p>
+            <p>{{ comment.content }}</p>
+            <p>{{ comment.created_at }}</p>
+
+             <a href="{% url 'comment_reply' post.pk comment.pk %}">답글달기</a>
+
+            {% for reply in comment.replies.all %}
+                     <div style="margin-left:30px; margin-top:10px; border-left:3px solid #ccc; padding-left:10px;">
+                     <p><strong>{{ reply.author }}</strong></p>
+                     <p>{{ reply.content }}</p>
+                    <p>{{ reply.created_at }}</p>
+                </div>
+            {% empty %}
+                 <p style="margin-left:30px;">답글 없음</p>
+            {% endfor %}
+        </div>
+     {% endfor %}
+{% else %}
+     <p>댓글이 없습니다.</p>
+{% endif %}
+    <a href="{% url 'comment' post.pk comment.pk %}">뒤로가기</a>
+</body>
+</html>

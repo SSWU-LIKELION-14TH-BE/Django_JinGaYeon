@@ -23,7 +23,7 @@ def signup_view(request):
 
 @login_required
 def home_view(request):
-    return render(request, 'home.html')
+    return redirect('post_list')
 
 def find_password_view(request):
     if request.method == 'POST':

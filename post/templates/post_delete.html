@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 삭제</title>
+</head>
+<body>
+    <h1>게시글 삭제</h1>
+
+    <p>정말 이 게시글을 삭제하시겠습니까?</p>
+    <p><strong>{{ post.title }}</strong></p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">삭제</button>
+    </form>
+
+    <a href="{% url 'post_list' %}">취소</a>
+</body>
+</html>
