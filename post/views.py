@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
 from . forms import PostForm, CommentForm
 from django.db.models import Count
+from django.db.models import F
 
 def post_list(request):
     query = request.GET.get('q', '')   
@@ -58,9 +59,9 @@ def comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments = post.comments.filter(post=post, parent__isnull=True).order_by('-created_at')
     form = CommentForm()
-
-    post.views += 1
-    post.save()
+    
+    Post.objects.filter(pk=pk).update(views=F('views') + 1)
+    post.refresh_from_db()
 
     return render(request, 'post_comment.html', {
         'post': post,
@@ -108,7 +109,7 @@ def post_like(request, pk):
         post.likes.remove(request.user)  
     else:
         post.likes.add(request.user)     
-    return redirect('post_list')
+    return redirect('comment', pk=pk)
 
 #댓글 작성
 @login_required

@@ -29,6 +29,8 @@ class Post(models.Model):
         blank=True    
     )
 
+    views = models.PositiveIntegerField(default=0)
+
     def __str__(self):
         return self.title
     
@@ -67,3 +69,5 @@ class Comment(models.Model):
     
     def like_count(self):
         return self.likes.count()
+    
+

@@ -1,0 +1,9 @@
+<!-- templates/user/edit_profile.html -->
+
+<h1>회원정보 수정</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">수정하기</button>
+</form>
