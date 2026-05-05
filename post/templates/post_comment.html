@@ -7,6 +7,10 @@
 <body>
 <h1>{{ post.title }}</h1>
 
+<a href="{% url 'user_guestbook' post.author.pk %}">
+    <button type="button">{{ post.author.nickname }} 방명록</button>
+</a>
+
 <p>작성자: {{ post.author.nickname }}</p>
 <p>조회수: {{ post.views }}회</p>
 <p>좋아요: {{ post.likes.count }}개</p>
