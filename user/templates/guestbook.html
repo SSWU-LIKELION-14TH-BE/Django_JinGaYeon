@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>방명록</title>
+</head>
+<body>
+
+<h1>{{ page_owner.nickname }}님의 방명록</h1>
+
+<a href="{% url 'mypage' %}">마이페이지로 돌아가기</a>
+
+<hr>
+
+<h2>방명록 작성</h2>
+
+<form method="post" action="{% url 'guestbook_create' page_owner.pk %}">
+    {% csrf_token %}
+    <textarea name="content" placeholder="방명록을 남겨주세요" required></textarea>
+    <button type="submit">작성</button>
+</form>
+
+<hr>
+
+<h2>작성된 방명록</h2>
+
+{% for guestbook in guestbooks %}
+    <div>
+        <p>
+            <strong>{{ guestbook.writer.nickname }}</strong>
+            <small>{{ guestbook.created_at }}</small>
+        </p>
+        <p>{{ guestbook.content }}</p>
+
+        {% if request.user == page_owner or request.user == guestbook.writer %}
+            <form method="post"
+                  action="{% url 'guestbook_delete' page_owner.pk guestbook.id %}"
+                  style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">삭제</button>
+            </form>
+        {% endif %}
+    </div>
+    <hr>
+{% endfor %}
+
+</body>
+</html>

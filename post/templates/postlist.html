@@ -1,50 +1,72 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>게시글 목록</title>
+    <link rel="stylesheet" href="{% static 'post/style.css' %}">
 </head>
+
 <body>
     <h1>게시글 목록</h1>
 
     {% if user.is_authenticated %}
         <a href="{% url 'post_create' %}">글쓰기</a>
         <p>{{ user.username }}님</p>
+
+        <form action="{% url 'mypage' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">마이페이지</button>
+        </form>
+
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">로그아웃</button>
+        </form>
+
     {% else %}
         <a href="{% url 'login' %}">로그인</a>
     {% endif %}
-        
-    <form action="{% url 'mypage' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">마이페이지</button>
-    </form>
 
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">로그아웃</button>
+    <!-- 검색 -->
+    <form method="get" action="">
+        <input type="text" name="q" value="{{ query }}" placeholder="검색어 입력">
+
+        <select name="sort">
+            <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
+            <option value="popular" {% if sort == 'popular' %}selected{% endif %}>인기순</option>
+        </select>
+
+        <button type="submit">검색</button>
     </form>
 
     <hr>
 
+    <!-- 게시글 목록 -->
     {% for post in posts %}
-        <div>
-            <h2>
-                <a href="{% url 'comment' post.pk %}">
-                    {{ post.title }}
-                </a>
-            </h2>
+        <div class="post-item">
 
-            {% if request.user == post.author %}
-                <a href="{% url 'post_update' post.pk %}">
-                    <button>게시물 수정</button>
-                </a>
-            {% endif %}
-            <p>작성자: {{ post.author }}</p>
-            <p>마지막 수정: {{ post.updated_at }}</p>
+            <!-- 왼쪽 (제목) -->
+            <div class="post-left">
+                <h2>
+                    <a href="{% url 'comment' post.pk %}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+            </div>
+
+            <!-- 오른쪽 (작성자 + 수정일) -->
+            <div class="post-right">
+                <p>작성자: {{ post.author }}</p>
+                <p>마지막 수정: {{ post.updated_at }}</p>
+            </div>
+
         </div>
 
-        <hr>
     {% empty %}
         <p>게시글이 없습니다.</p>
     {% endfor %}
 
+</body>
+</html>
