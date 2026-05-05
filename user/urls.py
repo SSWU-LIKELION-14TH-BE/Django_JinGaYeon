@@ -1,6 +1,6 @@
 from django.urls import path
-from django. contrib.auth import views as auth_views
-from .views import signup_view, home_view, find_password_view, reset_password_view
+from django.contrib.auth import views as auth_views
+from .views import signup_view,mypage_view, edit_profile_view, home_view, find_password_view, reset_password_view
 
 
 urlpatterns = [
@@ -13,5 +13,8 @@ urlpatterns = [
 
     path('Find_pw/', find_password_view, name='find_password'),
     path('Reset_pw/', reset_password_view, name='reset_password'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout')
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    path('mypage/', mypage_view, name='mypage'),
+    path('edit/', edit_profile_view, name='edit_profile'),
 ]

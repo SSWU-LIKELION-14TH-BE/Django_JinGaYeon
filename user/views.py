@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from django. contrib.auth import login
 from django. contrib. auth. decorators import login_required
 from .forms import SignUpForm
+from post.models import Post
+from .forms import UserUpdateForm
 from .models import CustomUser
 
 def signup_view(request):
@@ -61,6 +63,29 @@ def reset_password_view(request):
        return redirect ('login')
     
     return render(request, 'reset_pw.html')
+
+@login_required
+def mypage_view(request):
+    user = request.user
+
+    my_posts = Post. objects.filter(author=user).order_by('-created_at')
+
+    return render(request, 'mypage.html', {
+        'user': user,
+        'my_posts': my_posts,
+    })
+
+@login_required
+def edit_profile_view(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('mypage')
+    else:
+        form = UserUpdateForm(instance=request.user)
+
+    return render(request, 'edit_profile.html', {'form': form})
 
 
     

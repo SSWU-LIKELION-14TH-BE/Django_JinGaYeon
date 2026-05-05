@@ -8,3 +8,8 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'phone_number','nickname', 'password1', 'password2']
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'phone_number', 'nickname']

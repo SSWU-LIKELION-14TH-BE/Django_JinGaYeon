@@ -5,6 +5,46 @@
     <title>댓글</title>
 </head>
 <body>
+<h1>{{ post.title }}</h1>
+
+<p>작성자: {{ post.author.nickname }}</p>
+<p>조회수: {{ post.views }}회</p>
+<p>좋아요: {{ post.likes.count }}개</p>
+
+        <form method="post" action="{% url 'post_like' post.pk %}">
+            {% csrf_token %}
+            {% if user in post.likes.all %}
+                <button type="submit">좋아요 취소</button>
+            {% else %}
+                <button type="submit">좋아요</button>
+            {% endif %}
+        </form>    
+
+<hr>
+
+<p>{{ post.content }}</p>
+
+{% if post.image %}
+    <img src="{{ post.image.url }}" width="400">
+{% endif %}
+
+{% if post.github_url %}
+    <p>
+        <a href="{{ post.github_url }}" target="_blank">깃허브</a>
+    </p>
+{% endif %}
+
+            {% if request.user == post.author %}
+                <a href="{% url 'post_update' post.pk %}">
+                    <button>게시물 수정</button>
+                </a>
+            {% endif %}
+
+
+
+<hr>
+
+<h2>댓글</h2>
 
     {% for comment in comments %}
         <div style="border:1px solid #e03939; padding:10px; margin-bottom:10px;">

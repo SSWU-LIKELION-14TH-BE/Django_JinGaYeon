@@ -13,6 +13,11 @@
     {% else %}
         <a href="{% url 'login' %}">로그인</a>
     {% endif %}
+        
+    <form action="{% url 'mypage' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">마이페이지</button>
+    </form>
 
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
@@ -21,45 +26,25 @@
 
     <hr>
 
-{% for post in posts %}
-    <div style="border:1px solid #f9b4b4; margin:10px; padding:10px;">   
-        <a href="{% url 'post_detail' post.pk %}">
-            <button type="button">게시물 수정</button>   
-        </a>
+    {% for post in posts %}
+        <div>
+            <h2>
+                <a href="{% url 'comment' post.pk %}">
+                    {{ post.title }}
+                </a>
+            </h2>
 
-        <a href="{% url 'comment' post.pk %}">
-            <button type="button">댓글</button>   
-        </a>
-        
-        <h3>{{ post.title }} </h3>
-        <p>{{ post.content }} </p>
-        
-        {% if post.tech_stacks.all %}
-        <p>
-            <strong>기술 스택:</strong>
-            {% for tech in post.tech_stacks.all %}
-                {{ tech.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-        {% endif %}
-
-        <a href="{{ post.github_url}} ">깃허브</a>
-
-        {% if post.image %}
-                <img src="{{ post.image.url }}" alt="게시글 이미지" width="300">
-        {% endif %}
-            
-        <p>좋아요 {{ post.likes.count }}개</p>
-        <form method="post" action="{% url 'post_like' post.pk %}">
-            {% csrf_token %}
-            {% if user in post.likes.all %}
-                <button type="submit">좋아요 취소</button>
-            {% else %}
-                <button type="submit">좋아요</button>
+            {% if request.user == post.author %}
+                <a href="{% url 'post_update' post.pk %}">
+                    <button>게시물 수정</button>
+                </a>
             {% endif %}
-        </form>
-        <p>작성자: {{ post.author }}</p>
-        <p>마지막 수정: {{ post.updated_at }}</p>
-    </div>
-    <hr>
-{% endfor %}
+            <p>작성자: {{ post.author }}</p>
+            <p>마지막 수정: {{ post.updated_at }}</p>
+        </div>
+
+        <hr>
+    {% empty %}
+        <p>게시글이 없습니다.</p>
+    {% endfor %}
+

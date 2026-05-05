@@ -5,10 +5,30 @@ from django. contrib. auth. decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
 from . forms import PostForm, CommentForm
+from django.db.models import Count
+from django.db.models import F
 
 def post_list(request):
-    posts = Post.objects.order_by('-created_at')
-    return render(request, 'postlist.html', {'posts' : posts})
+    query = request.GET.get('q', '')   
+    sort = request.GET.get('sort', 'latest')
+
+    posts = Post.objects.all().order_by('-created_at')  
+
+    #검색
+    if query:
+        posts = posts.filter(title__icontains=query)  
+
+    #정렬
+    if sort == 'popular':
+        posts = posts.annotate(like_count=Count('likes')).order_by('-like_count')   
+    else:
+        posts = posts.order_by('-created_at')
+    
+    return render(request, 'postlist.html', {
+        'posts' : posts,
+        'query': query,
+        'sort' : sort,
+        })
 
 #게시물작성
 @login_required
@@ -24,7 +44,7 @@ def post_create(request):
         form = PostForm()
     return render(request, 'post_form.html', {'form':form}) 
 
-#게시물 수정
+#댓글작성
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comment_form = CommentForm()
@@ -39,6 +59,9 @@ def comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments = post.comments.filter(post=post, parent__isnull=True).order_by('-created_at')
     form = CommentForm()
+    
+    Post.objects.filter(pk=pk).update(views=F('views') + 1)
+    post.refresh_from_db()
 
     return render(request, 'post_comment.html', {
         'post': post,
@@ -86,7 +109,7 @@ def post_like(request, pk):
         post.likes.remove(request.user)  
     else:
         post.likes.add(request.user)     
-    return redirect('post_list')
+    return redirect('comment', pk=pk)
 
 #댓글 작성
 @login_required
@@ -156,4 +179,7 @@ def comment_like(request, pk , comment_pk):
     else:
         comment.likes.add(request.user)     
     return redirect('comment', pk=pk)
+
+
+   
 
