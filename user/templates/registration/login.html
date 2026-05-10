@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,6 +7,13 @@
 </head>
 <body>
     <h1>로그인</h1>
+
+    <p>
+        <a href="{% provider_login_url 'naver' %}">네이버 로그인</a>    
+    </p >
+    <p>
+        <a href="{% provider_login_url 'kakao' %}">카카오 로그인</a>
+    </p>    
 
     <form method="post">
         {% csrf_token %}

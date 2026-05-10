@@ -9,64 +9,72 @@
 </head>
 
 <body>
-    <h1>게시글 목록</h1>
 
-    {% if user.is_authenticated %}
-        <a href="{% url 'post_create' %}">글쓰기</a>
-        <p>{{ user.username }}님</p>
+    <div class="container">
+        <h1>게시글 목록</h1>
 
-        <form action="{% url 'mypage' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">마이페이지</button>
-        </form>
+        {% if user.is_authenticated %}
+            <div class="top-menu">
 
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">로그아웃</button>
-        </form>
+                <a href="{% url 'post_create' %}" class="btn">글쓰기</a>
 
-    {% else %}
-        <a href="{% url 'login' %}">로그인</a>
-    {% endif %}
+                <div class="user-box">
+                    <p>{{ user.username }}님</p>
 
-    <!-- 검색 -->
-    <form method="get" action="">
-        <input type="text" name="q" value="{{ query }}" placeholder="검색어 입력">
+                    <form action="{% url 'mypage' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-gray">마이페이지</button>
+                    </form>
 
-        <select name="sort">
-            <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
-            <option value="popular" {% if sort == 'popular' %}selected{% endif %}>인기순</option>
-        </select>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-gray">로그아웃</button>
+                    </form>
+                </div>
 
-        <button type="submit">검색</button>
-    </form>
-
-    <hr>
-
-    <!-- 게시글 목록 -->
-    {% for post in posts %}
-        <div class="post-item">
-
-            <!-- 왼쪽 (제목) -->
-            <div class="post-left">
-                <h2>
-                    <a href="{% url 'comment' post.pk %}">
-                        {{ post.title }}
-                    </a>
-                </h2>
             </div>
 
-            <!-- 오른쪽 (작성자 + 수정일) -->
-            <div class="post-right">
-                <p>작성자: {{ post.author }}</p>
-                <p>마지막 수정: {{ post.updated_at }}</p>
-            </div>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn">로그인</a>
+        {% endif %}
 
+        <!-- 검색 -->
+        <form method="get" action="" class="search-box">
+            <input type="text" name="q" value="{{ query }}" placeholder="검색어 입력">
+
+            <select name="sort">
+                <option value="latest" {% if sort == 'latest' %}selected{% endif %}>최신순</option>
+                <option value="popular" {% if sort == 'popular' %}selected{% endif %}>인기순</option>
+            </select>
+
+            <button type="submit" class="btn">검색</button>
+        </form>
+
+        <div class="post-list">
+            {% for post in posts %}
+                <div class="post-item">
+
+                    <div class="post-left">
+                        <h2>
+                            <a href="{% url 'comment' post.pk %}">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                    </div>
+
+                    <div class="post-right">
+                        <p>작성자: {{ post.author }}</p>
+                        <p>마지막 수정: {{ post.updated_at }}</p>
+                    </div>
+
+                </div>
+
+            {% empty %}
+                <p>게시글이 없습니다.</p>
+            {% endfor %}
         </div>
 
-    {% empty %}
-        <p>게시글이 없습니다.</p>
-    {% endfor %}
+    </div>
 
 </body>
 </html>

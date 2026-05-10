@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 from django.contrib. auth import views as auth_views
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path('user/', include('user.urls')),
     path('post/', include('post.urls')), 
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
